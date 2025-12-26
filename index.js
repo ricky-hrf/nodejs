@@ -1,25 +1,32 @@
-import { DatabaseSync } from 'node:sqlite';
+import { DB } from './07 sqlite demo/DB.js';
+import { ContactDB } from './07 sqlite demo/ContactDB.js';
 
 // open a database connection
-const db = new DatabaseSync('db.sqlite');
+const db = new DB('db.sqlite');
 
-// create a new table
-db.exec(`create table if not exists contacts(
-  id integer primary key,
-  firstName text not null,
-  lastName text not null,
-  email text not null
-  )`
-)
+const contactDB = new ContactDB(db.conn);
+// const contact = contactDB.create({
+//   firstName: 'hery',
+//   lastName: 'utomo',
+//   email: 'heriutomo@example.com',
+// }
+// );
 
-// insert a new row
-const stmt = db.prepare(
-  `INSERT INTO contacts (firstName, lastName, email) VALUES (?, ?, ?)`
-);
+// const contact = contactDB.findBy(2)
 
-const { lastInsertRowid } = stmt.run('John', 'Doe', 'johndoe@example.com');
+// contact.firstName = 'Ricky';
+// contact.lastName = 'Sendoro';
+// contact.email = 'rickysendoro@example.com'
 
-console.log(`Inserted contact id :${lastInsertRowid}`);
+// apply the changes to the database
+// contactDB.update(contact);
+// console.log(contact);
 
-// close the database
-if (db) db.close();
+// contactDB.delete(2);
+
+// reading all rows from table
+const data = contactDB.findAll()
+console.log(data)
+
+// tutup database
+db.close();
